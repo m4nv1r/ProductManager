@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     EditText product_price;
     ListView product_list;
     ArrayAdapter<String> adapter;
+    private int size = 0;
+    ArrayList<String> products;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void newProduct(View view){
-        if (product_name.getText().toString().equals("") || product_price.getText().toString().equals("")){
+        if (isEmpty(product_name.getText().toString(), product_price.getText().toString()) ||
+                !isValidProductName(product_name.getText().toString()) ||
+                !isValidProductPrice(product_price.getText().toString())){
             return;
         }
         MyDBHandler dbHandler = new MyDBHandler(this);
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // clear the text boxes
         product_price.setText("");
         product_name.setText("");
+        size++;
 
         Toast.makeText(this, "Product Added", Toast.LENGTH_SHORT).show();
     }
@@ -89,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             product_id.setText("Record Deleted");
             product_name.setText("");
             product_price.setText("");
+            size--;
             Toast.makeText(this, "Record Deleted", Toast.LENGTH_SHORT).show();
         } else {
             product_id.setText("No Match Found");
@@ -100,14 +106,39 @@ public class MainActivity extends AppCompatActivity {
 
         MyDBHandler dbHandler = new MyDBHandler(this);
 
-        ArrayList<String> products = dbHandler.allProducts();
+        products = dbHandler.allProducts();
 
-        if (products == null){
+        if (!isDisplayingAllProducts(products, size)){
             return;
         }
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, products);
 
         product_list.setAdapter(adapter);
+    }
+
+    public static boolean isValidProductName(String name){
+        return name.matches("[a-zA-Z]+");
+    }
+
+    public static boolean isEmpty(String product_name, String product_price){
+        if (product_name.equals("") || product_price.equals("")){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isValidProductPrice(String price){
+        if (price.matches("[0-9]+(\\.[0-9]*)?")){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isDisplayingAllProducts(ArrayList<String> products, int size){
+        if (products==null){
+            return size==0;
+        }
+        return size==products.size();
     }
 }
