@@ -3,6 +3,7 @@ package com.example.productmanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     EditText product_price;
     ListView product_list;
     ArrayAdapter<String> adapter;
-    private int size = 0;
+    //private int size = 0;
     ArrayList<String> products;
 
     @Override
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // clear the text boxes
         product_price.setText("");
         product_name.setText("");
-        size++;
+        //size++;
 
         Toast.makeText(this, "Product Added", Toast.LENGTH_SHORT).show();
     }
@@ -94,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             product_id.setText("Record Deleted");
             product_name.setText("");
             product_price.setText("");
-            size--;
+            //size--;
             Toast.makeText(this, "Record Deleted", Toast.LENGTH_SHORT).show();
         } else {
             product_id.setText("No Match Found");
@@ -108,9 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
         products = dbHandler.allProducts();
 
-        if (!isDisplayingAllProducts(products, size)){
-            return;
-        }
+//        if (!isDisplayingAllProducts(products, size)){
+//            Log.d("Here is a Message", "products "+products.size()+" size "+size);
+//            return;
+//        }
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, products);
 
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static boolean isValidProductName(String name){
+
         return name.matches("[a-zA-Z]+");
     }
 

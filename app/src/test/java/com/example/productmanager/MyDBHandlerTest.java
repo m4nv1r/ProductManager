@@ -25,4 +25,5 @@ public class MyDBHandlerTest {
         assertFalse(MainActivity.isValidProductPrice("hello"));
     }
 
+
 }
